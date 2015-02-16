@@ -7,9 +7,9 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
 
   private $test_tweets;
   private $test_tweet;
+  private $tweet;
 
   function setUp() {
-    $this->hiya = 'hiya';
 
     $this->test_tweet =
       '{ 
@@ -231,6 +231,7 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
           "lang": "en" 
        }';
     
+    $this->tweet = new Elit_Tweet( $this->test_tweet );
   }
 
   function test_tweet_setup() {
@@ -238,8 +239,41 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
   }
 
   function test_object_instantiation() {
-    $tweet = new Elit_Tweet( $this->test_tweet );
-    $this->assertNotNull( $tweet );
+    $this->assertNotNull( $this->tweet );
   }
+
+  function test_screen_name() {
+    $this->assertEquals( $this->tweet->screen_name, 'AndrewBuelt' );
+  }
+
+  function test_profile_image_url() {
+    $this->assertEquals( 
+      $this->tweet->profile_image_url, 
+      'http://pbs.twimg.com/profile_images/2578361273/imwu27z9whc1oebqgmgn_normal.jpeg' 
+    );
+  }
+
+  function test_profile_text() {
+    $this->assertEquals( 
+      $this->tweet->text, 
+      'Newest evidence on type 1 DM @AOA_GOAL @AOAforDOs @TheDOmagazine @FloridaDOs  https://t.co/voTh1agn7k http://t.co/1dz91SQnHF' 
+    );
+  }
+
+  function test_date() {
+    $this->assertEquals( 
+      $this->tweet->date, 
+      'Fri Feb 13 14:56:15 +0000 2015' 
+    );
+  }
+
+  function test_find_entities() {
+    $this->assertNotNull( $this->tweet->entities );
+  }
+
+  function test_find_user_mentions() {
+    $this->assertNotNull( $this->tweet->entities->user_mentions );
+  }
+  
 }
 
