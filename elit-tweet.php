@@ -79,7 +79,7 @@ class Elit_Tweet
       $entity->length = $hashtag->indices[1] - $hashtag->indices[0];
       $entity->replace = 
         sprintf( 
-          SELF::HASHTAG_LINK_PATTERN,  
+          self::HASHTAG_LINK_PATTERN,  
           strtolower( $hashtag->text ),
           $hashtag->text
         );
