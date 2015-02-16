@@ -117,8 +117,6 @@ class Elit_Tweet
         $user_mention->name,
         $user_mention->screen_name
       );
-echo '<pre>'; var_dump( $entity->replace ); echo '</pre>'; 
-echo '<pre>'; var_dump( self::USER_MENTION_LINK_PATTERN ); echo '</pre>'; die(  );
       $this->entity_holder[$entity->start] = $entity;
     }
   }

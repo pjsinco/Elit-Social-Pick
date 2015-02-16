@@ -112,21 +112,6 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
   $new_meta_value = 
     ( isset($_POST['elit-social-pick-id'] ) ? $_POST['elit-social-pick-id'] : '' );
 
-
-  $json_tweet = get_tweet( $new_meta_value );
-
-  if ( is_tweet( $json_tweet ) ) {
-    $tweet = new Elit_Tweet( $json_tweet );
-  }
-
-
-
-
-
-
-
-
-
   // set the meta key
   $meta_key = 'elit_social_pick_id';
 
@@ -138,15 +123,76 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
     //add_post_meta( $post_id, 'elit_foo', 'bar');
     add_post_meta( $post_id, $meta_key, $new_meta_value, true);
 
+    // get our tweet to add;
+    // make into a function?
+    $json_tweet = get_tweet( $new_meta_value );
+    if ( is_tweet( $json_tweet ) ) {
+      $tweet = new Elit_Tweet( $json_tweet );
+      add_post_meta( 
+        $post_id, 
+        'elit_social_pick_text', 
+        $tweet->text, 
+        true
+      );
+      add_post_meta( 
+        $post_id, 
+        'elit_social_pick_screen_name', 
+        $tweet->screen_name, 
+        true
+      );
+      add_post_meta( 
+        $post_id, 
+        'elit_social_pick_date', 
+        $tweet->date, 
+        true
+      );
+      add_post_meta( 
+        $post_id, 
+        'elit_social_pick_profile_image_url', 
+        $tweet->profile_image_url, 
+        true
+      );
+    }
     
 
   } elseif ($new_meta_value && $new_meta_value != $meta_value ) {
     // so the new meta value doesn't match the old one, so we're updating
     update_post_meta( $post_id, $meta_key, $new_meta_value );
+    // get our tweet to add;
+    // make into a function?
+    $json_tweet = get_tweet( $new_meta_value );
+    if ( is_tweet( $json_tweet ) ) {
+      $tweet = new Elit_Tweet( $json_tweet );
+      update_post_meta( 
+        $post_id, 
+        'elit_social_pick_text', 
+        $tweet->text
+      );
+      update_post_meta( 
+        $post_id, 
+        'elit_social_pick_screen_name', 
+        $tweet->screen_name
+      );
+      update_post_meta( 
+        $post_id, 
+        'elit_social_pick_date', 
+        $tweet->date
+      );
+      update_post_meta( 
+        $post_id, 
+        'elit_social_pick_profile_image_url', 
+        $tweet->profile_image_url
+      );
+    }
 
   } elseif ( $new_meta_value == '' && $meta_value) {
     // if there is no new meta value but an old value exists, delete it
     delete_post_meta( $post_id, $meta_key, $meta_value );
+    delete_post_meta( $post_id, 'elit_social_pick_id' );
+    delete_post_meta( $post_id, 'elit_social_pick_text' );
+    delete_post_meta( $post_id, 'elit_social_pick_screen_name' );
+    delete_post_meta( $post_id, 'elit_social_pick_date' );
+    delete_post_meta( $post_id, 'elit_social_pick_profile_image_url' );
 
   }
 }
@@ -179,7 +225,7 @@ function get_tweet( $id ) {
 }
 
 /**
- * Verifies whether 
+ * Verifies whether we've got a tweet in hand
  *
  */
 function is_tweet( $tweet ) {
@@ -221,13 +267,3 @@ function parse_time($date) {
   }
   return $d;
 }
-
-/**
- * Get the tweet ready for display, including HTML markup of 
- * links, mentions, hashtags.
- *
- * @return 
- */
-
-  
-
