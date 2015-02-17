@@ -154,7 +154,6 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
       );
     }
     
-
   } elseif ($new_meta_value && $new_meta_value != $meta_value ) {
     // so the new meta value doesn't match the old one, so we're updating
     update_post_meta( $post_id, $meta_key, $new_meta_value );
@@ -229,9 +228,7 @@ function get_tweet( $id ) {
  *
  */
 function is_tweet( $tweet ) {
-
   return !isset( $tweet->errors );
-  
 }
 
 function parse_time($date) {
