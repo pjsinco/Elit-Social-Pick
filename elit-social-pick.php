@@ -153,7 +153,27 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
         true
       );
     
-      update_post_title( $post_id, $tweet->date, $tweet->screen_name );
+      // see note about potential for infinite loop when calling from
+      // a function that hooks into save_posts, which we are doing
+      // http://codex.wordpress.org/Function_Reference/wp_update_post
+      if ( !wp_is_post_revision( $post_id ) ) {
+        // unhook this function so it doesn't loop infinitely
+        remove_action( 'save_post', 'elit_save_social_pick_id_meta' );
+  
+        // now we can update the post with wp_update_post(), which 
+        // also calls 'save_post'
+        elit_social_pick_update_post_title( 
+          $post_id, 
+          $tweet->date, 
+          $tweet->screen_name 
+        );
+
+        // rewire up 'save_post'
+        add_action( 'save_post', 'elit_save_social_pick_id_meta' );
+      }
+      //elit_social_pick_update_post_title( 
+        //$post_id, $tweet->date, $tweet->screen_name 
+      //);
     }
     
   } elseif ($new_meta_value && $new_meta_value != $meta_value ) {
@@ -184,8 +204,22 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
         'elit_social_pick_profile_image_url', 
         $tweet->profile_image_url
       );
-    }
 
+      // see note about potential for infinite loop when calling from
+      // a function that hooks into save_posts, which we are doing
+      // http://codex.wordpress.org/Function_Reference/wp_update_post
+      if ( !wp_is_post_revision( $post_id ) ) {
+        // unhook this function so it doesn't loop infinitely
+        remove_action( 'save_post', 'elit_save_social_pick_id_meta' );
+  
+        // now we can update the post with wp_update_post(), which 
+        // also calls 'save_post'
+        elit_social_pick_update_post_title( $post_id, $tweet->date, $tweet->screen_name );
+
+        // rewire up 'save_post'
+        add_action( 'save_post', 'elit_save_social_pick_id_meta' );
+      }
+    }
   } elseif ( $new_meta_value == '' && $meta_value) {
     // if there is no new meta value but an old value exists, delete it
     delete_post_meta( $post_id, $meta_key, $meta_value );
@@ -195,6 +229,16 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
     delete_post_meta( $post_id, 'elit_social_pick_date' );
     delete_post_meta( $post_id, 'elit_social_pick_profile_image_url' );
 
+    if ( !wp_is_post_revision( $post_id ) ) {
+      remove_action( 'save_post', 'elit_save_social_pick_id_meta' );
+      $args = array(
+        'ID' => $post_id,
+        'post_title' => 'Untitled',
+      );
+      wp_update_post( $args );
+      add_action( 'save_post', 'elit_save_social_pick_id_meta' );
+    }
+        
   }
 }
 
@@ -219,8 +263,9 @@ function get_tweet( $id ) {
  * Verifies whether we've got a tweet in hand
  *
  */
-function is_tweet( $tweet ) {
-  return !isset( $tweet->errors );
+function is_tweet( $json_tweet ) {
+  $tweet = json_decode( $json_tweet );
+  return !(isset( $tweet->errors ) ); 
 }
 
 function parse_time($date) {
@@ -257,13 +302,15 @@ function parse_time($date) {
   return $d;
 }
 
-function update_post_title( $post_id, $tweet_date, $name ) {
-  // we also need to to add the post title
-  $date = date( 'l, F jS', strtotime( $tweet_date ) );
-  $args = array(
-    'ID' => $post_id,
-    'post_title' => sprintf( '@%1$s: Picked on %2$s', $name, $date ),
-  );
-  wp_update_post( $args );
-  
+function elit_social_pick_update_post_title( $post_id, $post_date, $name ) {
+
+    // we also need to to add the post title
+    $date = date( 'l, F jS', strtotime( $post_date ) );
+    $args = array(
+      'ID' => $post_id,
+      'post_title' => sprintf( '@%1$s\'s tweet from %2$s', $name, $date ),
+    );
+    wp_update_post( $args );
+
 }
+
