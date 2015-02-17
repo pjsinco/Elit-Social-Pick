@@ -11,6 +11,7 @@
 class Elit_Tweet
 {
   private $tweet;
+  private $post_id;
   private $screen_name;
   private $profile_image_url;
   private $text;
@@ -35,8 +36,10 @@ class Elit_Tweet
    *
    * @param $json_str - a string of JSON, representing a tweet
    *            from the Twitter 1.1 REST API
+   * @param $post_id - the ID of the Elit Social Pick post the tweet
+                belongs go
    */
-  public function __construct( $json_str )
+  public function __construct( $json_str, $post_id )
   {
     $tweet = json_decode( $json_str );
     
@@ -150,51 +153,65 @@ class Elit_Tweet
     }
   }
 
+//  private function download_image() {
+//    // some code here from the wp codex
+//    // http://codex.wordpress.org/Function_Reference/wp_handle_sideload
+//    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+//
+//    $timeout_seconds = 5;
+//    $temp_file = download_url( $this->profile_image_url, $timeout_seconds );
+//
+//    if ( !is_wp_error( $temp_file ) ) {
+//      
+//      $file = array(
+//        'name' => basename( $this->profile_image_url ),
+//        'type' => 'image/jpg',
+//        'tmp_name' => $temp_file,
+//        'error' => 0,
+//        'size' => filesize( $temp_file )
+//      );
+//      
+//      $overrides = array(
+//
+//        // here, we're telling WP not to look for the POST form fields
+//        // that would normally be present; we downloaded the file from
+//        // a remote server, so there are no form fields
+//        'test_form' => false,
+//
+//        // we don't want wp to allow empty files
+//        'test_size' => true,
+//
+//        'test_upload' => true,
+//  
+//      );
+//
+//      $results = wp_handle_sideload( $file, $overrides );
+//
+//      if ( !empty( $results['error'] ) ) {
+//        
+//      } else {
+//        $filename = $results['file']; // full path to file
+//        $local_url = $results['url']; // url to the file in the uploads dir
+//        $type = $results['type']; // MIME type of the file
+//      }
+//
+//      echo '<pre>'; var_dump( $results ); echo '</pre>'; die(  );
+//    }
+//  }
+
   private function download_image() {
-    // some code here from the wp codex
-    // http://codex.wordpress.org/Function_Reference/wp_handle_sideload
+
+    require_once( ABSPATH . 'wp-admin/includes/media.php' );
     require_once( ABSPATH . 'wp-admin/includes/file.php' );
+    require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
-    $timeout_seconds = 5;
-    $temp_file = download_url( $this->profile_image_url, $timeout_seconds );
+    $image = media_sideload_image( 
+      $this->profile_image_url, 
+      $this->post_id,
+      'Twitter profile image for ' . $this->screen_name
+    );
 
-    if ( !is_wp_error( $temp_file ) ) {
-      
-      $file = array(
-        'name' => basename( $this->profile_image_url ),
-        'type' => 'image/jpg',
-        'tmp_name' => $temp_file,
-        'error' => 0,
-        'size' => filesize( $temp_file )
-      );
-      
-      $overrides = array(
-
-        // here, we're telling WP not to look for the POST form fields
-        // that would normally be present; we downloaded the file from
-        // a remote server, so there are no form fields
-        'test_form' => false,
-
-        // we don't want wp to allow empty files
-        'test_size' => true,
-
-        'test_upload' => true,
-  
-      );
-
-      $results = wp_handle_sideload( $file, $overrides );
-
-      if ( !empty( $results['error'] ) ) {
-        
-      } else {
-        $filename = $results['file']; // full path to file
-        $local_url = $results['url']; // url to the file in the uploads dir
-        $type = $results['type']; // MIME type of the file
-      }
-
-      echo '<pre>'; var_dump( $results ); echo '</pre>'; die(  );
-    }
+echo '<pre>'; var_dump( $image ); echo '</pre>'; die(  );
   }
-
 }
   
