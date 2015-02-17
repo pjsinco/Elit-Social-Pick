@@ -152,6 +152,8 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
         $tweet->profile_image_url, 
         true
       );
+    
+      update_post_title( $post_id, $tweet->date, $tweet->screen_name );
     }
     
   } elseif ($new_meta_value && $new_meta_value != $meta_value ) {
@@ -196,16 +198,6 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
   }
 }
 
-/**
- * Get the Twitter id off a link to a tweet
- *
- */
-function parse_link( $link ) {
-  $link_arr = parse_url( $link );
-  return array_pop( explode( '/', $link_arr['path'] ) );
-}
-
- 
 function get_tweet( $id ) {
   require_once( 'TwitterAPIExchange.php' );
 
@@ -263,4 +255,15 @@ function parse_time($date) {
     $d = date("s", $time_since) . " seconds ago";
   }
   return $d;
+}
+
+function update_post_title( $post_id, $tweet_date, $name ) {
+  // we also need to to add the post title
+  $date = date( 'l, F jS', strtotime( $tweet_date ) );
+  $args = array(
+    'ID' => $post_id,
+    'post_title' => sprintf( '@%1$s: Picked on %2$s', $name, $date ),
+  );
+  wp_update_post( $args );
+  
 }
