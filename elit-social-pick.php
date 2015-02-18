@@ -164,16 +164,13 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
         // also calls 'save_post'
         elit_social_pick_update_post_title( 
           $post_id, 
-          $tweet->date, 
+          $tweet->created_at, 
           $tweet->screen_name 
         );
 
         // rewire up 'save_post'
         add_action( 'save_post', 'elit_save_social_pick_id_meta' );
       }
-      //elit_social_pick_update_post_title( 
-        //$post_id, $tweet->date, $tweet->screen_name 
-      //);
     }
     
   } elseif ($new_meta_value && $new_meta_value != $meta_value ) {
@@ -214,7 +211,7 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
   
         // now we can update the post with wp_update_post(), which 
         // also calls 'save_post'
-        elit_social_pick_update_post_title( $post_id, $tweet->date, $tweet->screen_name );
+        elit_social_pick_update_post_title( $post_id, $tweet->created_at, $tweet->screen_name );
 
         // rewire up 'save_post'
         add_action( 'save_post', 'elit_save_social_pick_id_meta' );
@@ -304,7 +301,7 @@ function parse_time($date) {
 
 function elit_social_pick_update_post_title( $post_id, $post_date, $name ) {
     // we also need to to add the post title
-    $date = date( 'l, jS', strtotime( $post_date ) );
+    $date = date( 'l, F jS, Y', strtotime( $post_date ) );
     $args = array(
       'ID' => $post_id,
       'post_title' => sprintf( '@%1$s\'s tweet from %2$s', $name, $date ),

@@ -15,6 +15,7 @@ class Elit_Tweet
   private $profile_image_url;
   private $profile_image_name;
   private $text;
+  private $created_at;
   private $date;
   private $id;
   private $entity_holder;
@@ -53,6 +54,7 @@ class Elit_Tweet
       $this->format_profile_image_url( $tweet->user->profile_image_url );
     $this->profile_image_name = basename( $this->profile_image_url );
     $this->text = $tweet->text;
+    $this->created_at = $tweet->created_at;
     $this->date = $this->format_date( $tweet->created_at );
     $this->id = $tweet->id_str;
     $this->entity_holder = array();
@@ -233,7 +235,7 @@ class Elit_Tweet
     return sprintf( 
       '%1$s %2$s', 
       $months[$month_num], 
-      date( 'j' ) 
+      date( 'j', $str_date ) 
     );
   }
 
