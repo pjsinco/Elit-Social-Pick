@@ -5,8 +5,7 @@
  *
  *
  * help from:
- * http://blog.jacobemerick.com/web-development/
- *   parsing-twitter-feeds-with-php/
+ * http://blog.jacobemerick.com/web-development/parsing-twitter-feeds-with-php/
  */
 class Elit_Tweet
 {
@@ -50,7 +49,7 @@ class Elit_Tweet
       $this->format_profile_image_url( $tweet->user->profile_image_url );
     $this->profile_image_name = basename( $this->profile_image_url );
     $this->text = $tweet->text;
-    $this->date = $tweet->created_at;
+    $this->date = $this->format_date( $tweet->created_at );
     $this->id = $tweet->id_str;
     $this->entity_holder = array();
 
@@ -186,6 +185,24 @@ class Elit_Tweet
         'Twitter profile image for ' . $this->screen_name
       );
     }
+  }
+
+  private function format_date( $date ) {
+    
+    // our AP stylified months
+    $months = array( 
+      "", "Jan.", "Feb.", "March", "April", "May", "June", "July", 
+      "Aug.", "Sept.", "Oct.", "Nov.", "Dec." 
+    );
+
+    $str_date = strtotime( $date );
+    $month_num = date( 'n', $str_date );
+    return sprintf( 
+      '%1$s %2$s', 
+      $months[$month_num], 
+      date( 'j' ) 
+    );
+
   }
 }
   
