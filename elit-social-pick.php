@@ -303,7 +303,6 @@ function parse_time($date) {
 }
 
 function elit_social_pick_update_post_title( $post_id, $post_date, $name ) {
-
     // we also need to to add the post title
     $date = date( 'l, F jS', strtotime( $post_date ) );
     $args = array(
@@ -311,6 +310,5 @@ function elit_social_pick_update_post_title( $post_id, $post_date, $name ) {
       'post_title' => sprintf( '@%1$s\'s tweet from %2$s', $name, $date ),
     );
     wp_update_post( $args );
-
 }
 
