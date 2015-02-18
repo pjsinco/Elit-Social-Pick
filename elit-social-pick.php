@@ -130,7 +130,7 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
       $tweet = new Elit_Tweet( $json_tweet, $post_id );
       add_post_meta( 
         $post_id, 
-        'elit_social_pick_text', 
+        'elit_social_pick_tweet', 
         $tweet->text, 
         true
       );
@@ -186,7 +186,7 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
       $tweet = new Elit_Tweet( $json_tweet, $post_id );
       update_post_meta( 
         $post_id, 
-        'elit_social_pick_text', 
+        'elit_social_pick_tweet', 
         $tweet->text
       );
       update_post_meta( 
@@ -224,7 +224,7 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
     // if there is no new meta value but an old value exists, delete it
     delete_post_meta( $post_id, $meta_key, $meta_value );
     delete_post_meta( $post_id, 'elit_social_pick_id' );
-    delete_post_meta( $post_id, 'elit_social_pick_text' );
+    delete_post_meta( $post_id, 'elit_social_pick_tweet' );
     delete_post_meta( $post_id, 'elit_social_pick_screen_name' );
     delete_post_meta( $post_id, 'elit_social_pick_date' );
     delete_post_meta( $post_id, 'elit_social_pick_profile_image_url' );

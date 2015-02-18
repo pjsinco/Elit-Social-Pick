@@ -23,13 +23,13 @@ class Elit_Tweet
   private $urls;
   
   const HASHTAG_LINK_PATTERN = 
-    '<a href="http://twitter.com/search?q=%%23%s&src=hash" rel="nofollow" target="_blank">#%s</a>';
+    '<a href="http://twitter.com/search?q=%%23%s&src=hash" class="social-pick-red__link" rel="nofollow" target="_blank">#%s</a>';
 
   const URL_LINK_PATTERN =
-    '<a href="%s" rel="nofollow" target="_blank" title="%s">%s</a>';
+    '<a href="%s" class="social-pick-red__link" rel="nofollow" target="_blank" title="%s">%s</a>';
 
   const USER_MENTION_LINK_PATTERN =
-    '<a href="http://twitter.com/%s" rel="nofollow" target="_blank" title="%s">@%s</a>';
+    '<a href="http://twitter.com/%s" class="social-pick-red__link" rel="nofollow" target="_blank" title="%s">@%s</a>';
   
   /**
    * Build our Elit Tweet object.
@@ -57,7 +57,7 @@ class Elit_Tweet
     $this->user_mentions = $tweet->entities->user_mentions;
     $this->urls = $tweet->entities->urls;
     $this->format_body();
-    $this->download_image();
+    $this->setup_attachment();
   }
 
   /**
@@ -169,13 +169,19 @@ class Elit_Tweet
     }
   }
 
-  private function download_image() {
+  /**
+   * Download profile image, if necessary, and set the profile
+   * image as the thumbnail of the elit_social_pick post
+   * 
+   */
+  private function setup_attachment() {
     require_once( ABSPATH . 'wp-admin/includes/media.php' );
     require_once( ABSPATH . 'wp-admin/includes/file.php' );
     require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
     $upload_dir = wp_upload_dir();
     $image_path = $upload_dir['path'] . '/' . $this->profile_image_name;
+    $image_url = $upload_dir['url'] . '/' . $this->profile_image_name;
 
     // make sure we don't already have the file before downloading it
     if ( !file_exists( $image_path ) ) {
@@ -185,10 +191,12 @@ class Elit_Tweet
         'Twitter profile image for ' . $this->screen_name
       );
     }
+
+    $image_id = $this->elit_get_attachment_id_by_url( $image_url );
+    set_post_thumbnail( $this->post_id, $image_id );
   }
 
   private function format_date( $date ) {
-    
     // our AP stylified months
     $months = array( 
       "", "Jan.", "Feb.", "March", "April", "May", "June", "July", 
@@ -202,7 +210,47 @@ class Elit_Tweet
       $months[$month_num], 
       date( 'j' ) 
     );
+  }
 
+  // code slavishly copied from fjarret:
+  // https://gist.github.com/fjarrett/5544469
+  /**
+   * Return the ID of an attachment by serach the db with the file URL
+   *
+   * code slavishly copied from fjarret:
+   * https://gist.github.com/fjarrett/5544469
+   * @param string $url the url of the image
+   * @return int | null  - returns an attachment ID or null 
+   */
+  private function elit_get_attachment_id_by_url( $url ) {
+    
+    // split the $url into 2 parts, 
+    // the first being the url of the site
+    // the second being '/uploads/<year>/<month>/<filename>
+    $parsed_url = 
+      explode ( parse_url( WP_CONTENT_URL, PHP_URL_PATH ), $url );
+
+    $this_host = str_ireplace( 'www.', '', parse_url( home_url(), PHP_URL_HOST ) );
+    $file_host = str_ireplace( 'www.', '', parse_url( $url, PHP_URL_HOST ) );
+
+    if ( !isset( $parsed_url[1] ) || empty( $parsed_url[1] ) || 
+      ( $this_host != $file_host) ) {
+      return;
+    }
+
+    // search the db for any attachment guid with a partial path match
+    global $wpdb;
+
+    $attachment = $wpdb->get_col(
+      $wpdb->prepare(
+       "SELECT ID
+        FROM {$wpdb->prefix}posts
+        WHERE guid RLIKE %s;
+       ", $parsed_url[1] 
+      )
+    );
+
+    return $attachment[0];
   }
 }
   
