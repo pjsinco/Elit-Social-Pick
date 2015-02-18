@@ -20,6 +20,7 @@ class Elit_Tweet
   private $entity_holder;
   private $user_mentions;
   private $hashtags;
+  private $media;
   private $urls;
   
   const HASHTAG_LINK_PATTERN = 
@@ -30,6 +31,9 @@ class Elit_Tweet
 
   const USER_MENTION_LINK_PATTERN =
     '<a href="http://twitter.com/%s" class="social-pick-red__link" rel="nofollow" target="_blank" title="%s">@%s</a>';
+  
+  const MEDIA_LINK_PATTERN =
+    '<a href="%s" class="social-pick-red__link" rel="nofollow" target="_blank" title="Attached media">@%s</a>';
   
   /**
    * Build our Elit Tweet object.
@@ -56,6 +60,7 @@ class Elit_Tweet
     $this->hashtags = $tweet->entities->hashtags;
     $this->user_mentions = $tweet->entities->user_mentions;
     $this->urls = $tweet->entities->urls;
+    $this->media = $tweet->entities->media;
     $this->format_body();
     $this->setup_attachment();
   }
@@ -68,6 +73,7 @@ class Elit_Tweet
     $this->format_hashtags();
     $this->format_urls();
     $this->format_mentions();
+    $this->format_media();
 
     // we have to be sure to add the links starting from the rear 
     // and proceeding to the front
@@ -140,6 +146,25 @@ class Elit_Tweet
         $user_mention->screen_name,
         $user_mention->name,
         $user_mention->screen_name
+      );
+      $this->entity_holder[$entity->start] = $entity;
+    }
+  }
+
+  /**
+   * Add HTML markup for the tweet's media attachments
+   *
+   */
+  private function format_media() {
+    foreach ( $this->media as $media ) {
+      $entity = new stdClass();
+      $entity->start = $media->indices[0];
+      $entity->end = $media->indices[1];
+      $entity->length = $media->indices[1] - $media->indices[0];
+      $entity->replace = sprintf(
+        self::MEDIA_LINK_PATTERN,
+        $media->url,
+        $media->display_url
       );
       $this->entity_holder[$entity->start] = $entity;
     }
