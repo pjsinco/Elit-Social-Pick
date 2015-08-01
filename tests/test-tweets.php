@@ -5,7 +5,7 @@ require_once( 'elit-tweet.php' );
 
 class Elit_Tweet_Tests extends WP_UnitTestCase {
 
-  private $test_tweets;
+  private $test_tweets = array();
   private $test_tweet;
   private $tweet;
 
@@ -232,21 +232,41 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
        }';
     
     $this->tweet = new Elit_Tweet( $this->test_tweet );
+    $this->tweet->set_post_id(3);
+  }
+
+  function test_set_post_id() {
+    $this->tweet->set_post_id(3);
+    $this->assertEquals(3, $this->tweet->post_id);
+  }
+
+  function test_set_screen_name() {
+    $this->tweet->set_screen_name($this->tweet->tweet->user->screen_name);
+    $this->assertSame("AndrewBuelt", $this->tweet->screen_name);
+  }
+
+  function test_set_profile_image_url() {
+    $this->markTestIncomplete();
+
   }
 
   function test_tweet_setup() {
+    $this->markTestIncomplete();
     $this->assertStringStartsWith( '{', $this->test_tweet );
   }
 
   function test_object_instantiation() {
+    $this->markTestIncomplete();
     $this->assertNotNull( $this->tweet );
   }
 
   function test_screen_name() {
+    $this->markTestIncomplete();
     $this->assertEquals( $this->tweet->screen_name, 'AndrewBuelt' );
   }
 
   function test_profile_image_url() {
+    $this->markTestIncomplete();
     $this->assertEquals( 
       $this->tweet->profile_image_url, 
       'http://pbs.twimg.com/profile_images/2578361273/imwu27z9whc1oebqgmgn_normal.jpeg' 
@@ -254,6 +274,7 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
   }
 
   function test_profile_text() {
+    $this->markTestIncomplete();
     $this->assertEquals( 
       $this->tweet->text, 
       'Newest evidence on type 1 DM @AOA_GOAL @AOAforDOs @TheDOmagazine @FloridaDOs  https://t.co/voTh1agn7k http://t.co/1dz91SQnHF' 
@@ -261,6 +282,7 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
   }
 
   function test_date() {
+    $this->markTestIncomplete();
     $this->assertEquals( 
       $this->tweet->date, 
       'Fri Feb 13 14:56:15 +0000 2015' 
@@ -268,10 +290,12 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
   }
 
   function test_find_entities() {
+    $this->markTestIncomplete();
     $this->assertNotNull( $this->tweet->entities );
   }
 
   function test_find_user_mentions() {
+    $this->markTestIncomplete();
     $this->assertNotNull( $this->tweet->entities->user_mentions );
   }
   

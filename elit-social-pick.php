@@ -127,7 +127,8 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
     // make into a function?
     $json_tweet = get_tweet( $new_meta_value );
     if ( is_tweet( $json_tweet ) ) {
-      $tweet = new Elit_Tweet( $json_tweet, $post_id );
+      $tweet = new Elit_Tweet( $json_tweet );
+      $tweet->init( $post_id );
       add_post_meta( 
         $post_id, 
         'elit_social_pick_tweet', 
@@ -180,7 +181,8 @@ function elit_save_social_pick_id_meta( $post_id, $post ) {
     // make into a function?
     $json_tweet = get_tweet( $new_meta_value );
     if ( is_tweet( $json_tweet ) ) {
-      $tweet = new Elit_Tweet( $json_tweet, $post_id );
+      $tweet = new Elit_Tweet( $json_tweet );
+      $tweet->init( $post_id );
       update_post_meta( 
         $post_id, 
         'elit_social_pick_tweet', 

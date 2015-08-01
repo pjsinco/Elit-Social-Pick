@@ -41,38 +41,108 @@ class Elit_Tweet
    *
    * @param $json_str - a string of JSON, representing a tweet
    *            from the Twitter 1.1 REST API
-   * @param $post_id - the ID of the Elit Social Pick post the tweet
-                belongs go
    */
-  public function __construct( $json_str, $post_id )
+  public function __construct( $json_str )
   {
-    $tweet = json_decode( $json_str );
-    
-    $this->post_id = $post_id;
-    $this->screen_name = $tweet->user->screen_name;
-    $this->profile_image_url = 
-      $this->format_profile_image_url( $tweet->user->profile_image_url );
-    $this->profile_image_name = basename( $this->profile_image_url );
-    $this->text = $tweet->text;
-    $this->created_at = $tweet->created_at;
-    $this->date = $this->format_date( $tweet->created_at );
-    $this->id = $tweet->id_str;
+    $this->tweet = json_decode( $json_str );
     $this->entity_holder = array();
+  }
 
-    $this->hashtags = $tweet->entities->hashtags;
-    $this->user_mentions = $tweet->entities->user_mentions;
-    $this->urls = $tweet->entities->urls;
-    $this->media = $tweet->entities->media;
+  public function init($post_id) {
+
+    $this->set_post_id( $post_id );
+    $this->set_screen_name( $this->tweet->user->screen_name );
+    $this->set_profile_image_url( $this->tweet->user->profile_image_url );
+    $this->set_profile_image_name( 
+        basename( $this->profile_image_url )
+    );
+    $this->set_text( $this->tweet->text );
+    $this->set_created_at( $this->tweet->created_at );
+    $this->set_date( 
+        $this->format_date( 
+            $this->tweet->created_at 
+        )
+    );
+    $this->set_id( $this->tweet->id_str );
+    $this->set_hashtags( $this->tweet->entities->hashtags );
+    $this->set_user_mentions( $this->tweet->entities->user_mentions );
+    $this->set_urls( $this->tweet->entities->urls );
+    $this->set_media( $this->tweet->entities->media );
+
     $this->format_body();
     $this->setup_attachment();
   }
+
+  /**
+   * Set the ID of the Elit Social Pick custom post type
+   *
+   * @param $post_id - the ID of the Elit Social Pick post the tweet
+                belongs go
+   * @return void
+   * @author PJ
+   */
+  public function set_post_id( $post_id ) {
+    $this->post_id = $post_id;
+  }
+
+  public function set_screen_name( $screen_name ) {
+    $this->screen_name = $screen_name;
+  }
+
+  public function set_profile_image_url( $profile_image_url ) {
+    $this->profile_image_url = 
+      $this->format_profile_image_url( $profile_image_url );
+  }
+
+  public function set_profile_image_name( $profile_image_name ) {
+    $this->profile_image_name = $profile_image_name;
+  }
+
+  // be sure to replace any &nbsp; entities that may be in the tweet.
+  // Ex. 626125868247552000
+  // See chudadie's comment in the accepted answer:
+  // http://stackoverflow.com/questions/6275380/
+  //       does-html-entity-decode-replaces-nbsp-also-if-not-how-to-replace-it
+  public function set_text( $text ) {
+    $text_raw = html_entity_decode($text);
+    $this->text = str_replace("\xC2\xA0", ' ', $text_raw);
+  }
+
+  public function set_created_at( $created_at ) {
+    $this->created_at = $created_at;
+  }
+
+  public function set_date( $date ) {
+    $this->date = $date;
+  }
+
+  public function set_id( $id ) {
+    $this->id = $id;
+  }
+
+  public function set_hashtags( $hashtags ) {
+    $this->hashtags = $hashtags;
+  }
+
+  public function set_user_mentions( $user_mentions ) {
+    $this->user_mentions = $user_mentions;
+  }
+
+  public function set_urls( $urls ) {
+    $this->urls = $urls;
+  }
+
+  public function set_media( $media ) {
+    $this->media = $media;
+  }
+
 
   /**
    * Mark up the text of the tweet, with links for hashtags, urls and user mentions
    *
    */
   private function format_body() {
-    $this->format_hashtags();
+    $this->format_hashtags( $this->hashtags );
     $this->format_urls();
     $this->format_mentions();
     $this->format_media();
@@ -80,7 +150,6 @@ class Elit_Tweet
     // we have to be sure to add the links starting from the rear 
     // and proceeding to the front
     krsort( $this->entity_holder );
-    
     foreach ( $this->entity_holder as $entity ) {
       $this->text = substr_replace( 
         $this->text, 
@@ -95,8 +164,14 @@ class Elit_Tweet
    * Add HTML markup for the tweet's hashtags
    *
    */
-  private function format_hashtags() {
-    foreach ( $this->hashtags as $hashtag ) {
+  public function format_hashtags( $hashtags ) {
+    foreach ( $hashtags as $hashtag ) {
+      $entity = $this->format_hashtag( $hashtag );
+      $this->entity_holder[$entity->start] = $entity;
+    }
+  }
+
+  public function format_hashtag( $hashtag ) {
       $entity = new stdClass();
       $entity->start = $hashtag->indices[0];
       $entity->end = $hashtag->indices[1];
@@ -107,9 +182,7 @@ class Elit_Tweet
           strtolower( $hashtag->text ),
           $hashtag->text
         );
-
-      $this->entity_holder[$entity->start] = $entity;
-    }
+      return $entity;
   }
 
   /**
@@ -180,8 +253,9 @@ class Elit_Tweet
    */
   private function format_profile_image_url( $url ) {
     $info = pathinfo( $url );
-    return $info['dirname'] . '/' .
+    $formatted_url = $info['dirname'] . '/' .
       str_replace( '_normal', '_bigger', $info['basename'] );
+    return $formatted_url;
   }
   
   
