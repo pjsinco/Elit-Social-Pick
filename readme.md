@@ -151,3 +151,8 @@
         "lang": "en" 
     }
     ```
+
+#####Sat Sep  5 20:54:43 2015 CDT
+* Troublesome tweets that Rose has pointed out:
+    * 639511046697431040
+    * 626125868247552000

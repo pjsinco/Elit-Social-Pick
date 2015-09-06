@@ -104,8 +104,9 @@ class Elit_Tweet
   // http://stackoverflow.com/questions/6275380/
   //       does-html-entity-decode-replaces-nbsp-also-if-not-how-to-replace-it
   public function set_text( $text ) {
-    $text_raw = html_entity_decode($text);
-    $this->text = str_replace("\xC2\xA0", ' ', $text_raw);
+    //$text_raw = html_entity_decode($text);
+    //$this->text = str_replace("\xC2\xA0", ' ', $text_raw);
+    $this->text = str_replace("\xC2\xA0", ' ', $text);
   }
 
   public function set_created_at( $created_at ) {
