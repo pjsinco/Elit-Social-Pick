@@ -285,16 +285,17 @@ class Elit_Tweet
     $image_path = $upload_dir['path'] . '/' . $this->profile_image_name;
     $image_url = $upload_dir['url'] . '/' . $this->profile_image_name;
 
-    // make sure we don't already have the file before downloading it
-    if ( !file_exists( $image_path ) ) {
+    //if ( !file_exists( $image_path ) ) {
       $image = media_sideload_image( 
         $this->profile_image_url, 
         $this->post_id,
-        'Twitter profile image for ' . $this->screen_name
+        'Twitter profile image for ' . $this->screen_name,
+        'src'
       );
-    }
+    //}
 
-    $image_id = $this->elit_get_attachment_id_by_url( $image_url );
+    //$image_id = $this->elit_get_attachment_id_by_url( $image_url );
+    $image_id = $this->elit_get_attachment_id_by_url( $image );
     set_post_thumbnail( $this->post_id, $image_id );
   }
 

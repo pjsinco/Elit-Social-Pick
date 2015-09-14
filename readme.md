@@ -156,3 +156,17 @@
 * Troublesome tweets that Rose has pointed out:
     * 639511046697431040
     * 626125868247552000
+
+#####Mon Sep 14 18:07:39 2015 CDT
+* Troublesome tweet Rose pointed out:
+    * 642433335269134300
+        * The image for this tweet wasn't showing up.
+        ```js
+        "profile_image_url": "http://pbs.twimg.com/profile_images/622922297662435328/_tektL88_normal.jpg", 
+        ```  
+        * The title begins with an underscore.
+            * It appears the underscore was getting lopped off somewhere during WP's media_sideload_image() call
+            * That function can return a url string ready to use as in an <img src="">
+                * That string has the correct title, i.e., without the leading "_"
+                * So we use that returned string in further processing, as opposed to the original $profile_image_url
+
