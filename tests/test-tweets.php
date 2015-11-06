@@ -11,6 +11,207 @@ class Elit_Tweet_Tests extends WP_UnitTestCase {
 
   function setUp() {
 
+            // troublesome tweet 2015-11-06
+//           '{
+//               "created_at": "Fri Nov 06 00:18:15 +0000 2015", 
+//               "id": 662423716471504900, 
+//               "id_str": "662423716471504896", 
+//               "text": "The geriatrician shortage: The problem isn’t what you think https://t.co/sOLWSrCsy7 https://t.co/VhH2oB442L", 
+//               "source": "<a href=\"http://twibble.io\" rel=\"nofollow\">Twibble.io</a>", 
+//               "truncated": false, 
+//               "in_reply_to_status_id": null, 
+//               "in_reply_to_status_id_str": null, 
+//               "in_reply_to_user_id": null, 
+//               "in_reply_to_user_id_str": null, 
+//               "in_reply_to_screen_name": null, 
+//               "user": { 
+//                   "id": 11274452, 
+//                   "id_str": "11274452", 
+//                   "name": "Kevin Pho, M.D.", 
+//                   "screen_name": "kevinmd", 
+//                   "location": "Nashua, NH, north of Boston", 
+//                   "description": "Physician, author, keynote speaker, USA TODAY\'s Board of Contributors. Social media's leading physician voice. http://t.co/MlC37Wze and http://t.co/hThNxwTt", 
+//                   "url": "http://t.co/lOM5qo8ZrG", 
+//                   "entities": { 
+//                       "url": { 
+//                           "urls": [ 
+//                               { 
+//                                   "url": "http://t.co/lOM5qo8ZrG", 
+//                                   "expanded_url": "http://KevinMD.com", 
+//                                   "display_url": "KevinMD.com", 
+//                                   "indices": [ 
+//                                       0, 
+//                                       22 
+//                                   ] 
+//                               } 
+//                           ] 
+//                       }, 
+//                       "description": { 
+//                           "urls": [ 
+//                               { 
+//                                   "url": "http://t.co/MlC37Wze", 
+//                                   "expanded_url": "http://KevinMD.com", 
+//                                   "display_url": "KevinMD.com", 
+//                                   "indices": [ 
+//                                       111, 
+//                                       131 
+//                                   ] 
+//                               }, 
+//                               { 
+//                                   "url": "http://t.co/hThNxwTt", 
+//                                   "expanded_url": "http://KevinMD.com/blog/reputation", 
+//                                   "display_url": "KevinMD.com/blog/reputation", 
+//                                   "indices": [ 
+//                                       136, 
+//                                       156 
+//                                   ] 
+//                               } 
+//                           ] 
+//                       } 
+//                   }, 
+//                   "protected": false, 
+//                   "followers_count": 130514, 
+//                   "friends_count": 20251, 
+//                   "listed_count": 5037, 
+//                   "created_at": "Tue Dec 18 00:53:29 +0000 2007", 
+//                   "favourites_count": 0, 
+//                   "utc_offset": -18000, 
+//                   "time_zone": "Eastern Time (US & Canada)", 
+//                   "geo_enabled": true, 
+//                   "verified": false, 
+//                   "statuses_count": 33252, 
+//                   "lang": "en", 
+//                   "contributors_enabled": false, 
+//                   "is_translator": false, 
+//                   "is_translation_enabled": false, 
+//                   "profile_background_color": "FFFFFF", 
+//                   "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/731024649/1d071aebac004477c6356d512e435c68.jpeg", 
+//                   "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/731024649/1d071aebac004477c6356d512e435c68.jpeg", 
+//                   "profile_background_tile": false, 
+//                   "profile_image_url": "http://pbs.twimg.com/profile_images/1182717255/Kevin2_WEB_normal.jpg", 
+//                   "profile_image_url_https": "https://pbs.twimg.com/profile_images/1182717255/Kevin2_WEB_normal.jpg", 
+//                   "profile_banner_url": "https://pbs.twimg.com/profile_banners/11274452/1398255994", 
+//                   "profile_link_color": "990000", 
+//                   "profile_sidebar_border_color": "FFFFFF", 
+//                   "profile_sidebar_fill_color": "F3F3F3", 
+//                   "profile_text_color": "333333", 
+//                   "profile_use_background_image": true, 
+//                   "has_extended_profile": false, 
+//                   "default_profile": false, 
+//                   "default_profile_image": false, 
+//                   "following": false, 
+//                   "follow_request_sent": false, 
+//                   "notifications": false 
+//               }, 
+//               "geo": null, 
+//               "coordinates": null, 
+//               "place": null, 
+//               "contributors": null, 
+//               "is_quote_status": false, 
+//               "retweet_count": 3, 
+//               "favorite_count": 3, 
+//               "entities": { 
+//                   "hashtags": [], 
+//                   "symbols": [], 
+//                   "user_mentions": [], 
+//                   "urls": [ 
+//                       { 
+//                           "url": "https://t.co/sOLWSrCsy7", 
+//                           "expanded_url": "http://bit.ly/1StxwbT", 
+//                           "display_url": "bit.ly/1StxwbT", 
+//                           "indices": [ 
+//                               60, 
+//                               83 
+//                           ] 
+//                       } 
+//                   ], 
+//                   "media": [ 
+//                       { 
+//                           "id": 662423714600849400, 
+//                           "id_str": "662423714600849408", 
+//                           "indices": [ 
+//                               84, 
+//                               107 
+//                           ], 
+//                           "media_url": "http://pbs.twimg.com/media/CTFm29eUEAAuSrz.jpg", 
+//                           "media_url_https": "https://pbs.twimg.com/media/CTFm29eUEAAuSrz.jpg", 
+//                           "url": "https://t.co/VhH2oB442L", 
+//                           "display_url": "pic.twitter.com/VhH2oB442L", 
+//                           "expanded_url": "http://twitter.com/kevinmd/status/662423716471504896/photo/1", 
+//                           "type": "photo", 
+//                           "sizes": { 
+//                               "large": { 
+//                                   "w": 1000, 
+//                                   "h": 1000, 
+//                                   "resize": "fit" 
+//                               }, 
+//                               "small": { 
+//                                   "w": 340, 
+//                                   "h": 340, 
+//                                   "resize": "fit" 
+//                               }, 
+//                               "thumb": { 
+//                                   "w": 150, 
+//                                   "h": 150, 
+//                                   "resize": "crop" 
+//                               }, 
+//                               "medium": { 
+//                                   "w": 600, 
+//                                   "h": 600, 
+//                                   "resize": "fit" 
+//                               } 
+//                           } 
+//                       } 
+//                   ] 
+//               }, 
+//               "extended_entities": { 
+//                   "media": [ 
+//                       { 
+//                           "id": 662423714600849400, 
+//                           "id_str": "662423714600849408", 
+//                           "indices": [ 
+//                               84, 
+//                               107 
+//                           ], 
+//                           "media_url": "http://pbs.twimg.com/media/CTFm29eUEAAuSrz.jpg", 
+//                           "media_url_https": "https://pbs.twimg.com/media/CTFm29eUEAAuSrz.jpg", 
+//                           "url": "https://t.co/VhH2oB442L", 
+//                           "display_url": "pic.twitter.com/VhH2oB442L", 
+//                           "expanded_url": "http://twitter.com/kevinmd/status/662423716471504896/photo/1", 
+//                           "type": "photo", 
+//                           "sizes": { 
+//                               "large": { 
+//                                   "w": 1000, 
+//                                   "h": 1000, 
+//                                   "resize": "fit" 
+//                               }, 
+//                               "small": { 
+//                                   "w": 340, 
+//                                   "h": 340, 
+//                                   "resize": "fit" 
+//                               }, 
+//                               "thumb": { 
+//                                   "w": 150, 
+//                                   "h": 150, 
+//                                   "resize": "crop" 
+//                               }, 
+//                               "medium": { 
+//                                   "w": 600, 
+//                                   "h": 600, 
+//                                   "resize": "fit" 
+//                               } 
+//                           } 
+//                       } 
+//                   ] 
+//               }, 
+//               "favorited": false, 
+//               "retweeted": false, 
+//               "possibly_sensitive": false, 
+//               "possibly_sensitive_appealable": false, 
+//               "lang": "en" 
+//            
+//        }';
+
     $this->test_tweet =
       '{ 
           "created_at": "Fri Feb 13 14:56:15 +0000 2015", 
