@@ -20,7 +20,7 @@ function elit_social_pick_cpt() {
    * For displaying the big image on the home page
    */
   $labels = array(
-    'name'               => 'Social Pick',
+    'name'               => 'Social Picks',
     'singular_name'      => 'Social Pick',
     'menu_name'          => 'Social Pick',
     'name_admin_bar'     => 'Social Pick',
