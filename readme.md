@@ -170,3 +170,7 @@
                 * That string has the correct title, i.e., without the leading "_"
                 * So we use that returned string in further processing, as opposed to the original $profile_image_url
 
+#####Thu 20 Oct 2016 02:40:22 PM CDT CDT
+* Twitter now has an extended mode, which changed the names of some fields. 
+When 'truncated' is true, the tweet's text is in 'text.' When 'truncated'
+is false, the text is in 'full_text'.
