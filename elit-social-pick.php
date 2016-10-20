@@ -3,7 +3,7 @@ require_once( 'elit-tweet.php' );
 /**
  * Plugin Name: Elit Social Pick
  * Description: Display a hand-picked tweet
- * Version: 0.0.1
+ * Version: 0.1.1
  * Author: Patrick Sinco
  * 
  * Note: Keep twitter authentication settings in a separate file
@@ -248,7 +248,7 @@ function get_tweet( $id ) {
   require( dirname( __FILE__ ) . '/twitter-auth.php' );
   $url = 'https://api.twitter.com/1.1/statuses/show.json';
   $request_method = 'GET';
-  $get_field = '?id=' . $id;
+  $get_field = '?id=' . $id . '&tweet_mode=extended';
   
   $tweet = new TwitterAPIExchange( $settings );
   $tweet = $tweet->setGetField( $get_field );
