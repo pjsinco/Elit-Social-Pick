@@ -49,14 +49,17 @@ class Elit_Tweet
   }
 
   public function init($post_id) {
-
     $this->set_post_id( $post_id );
     $this->set_screen_name( $this->tweet->user->screen_name );
     $this->set_profile_image_url( $this->tweet->user->profile_image_url );
     $this->set_profile_image_name( 
         basename( $this->profile_image_url )
     );
-    $this->set_text( $this->tweet->text );
+
+    // Reflect Twitter's new extended mode 2016-10-20
+    //$this->set_text( $this->tweet->text );
+    $this->set_text( $this->tweet->full_text ); 
+
     $this->set_created_at( $this->tweet->created_at );
     $this->set_date( 
         $this->format_date( 
