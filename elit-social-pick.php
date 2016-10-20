@@ -3,7 +3,7 @@ require_once( 'elit-tweet.php' );
 /**
  * Plugin Name: Elit Social Pick
  * Description: Display a hand-picked tweet
- * Version: 0.0.1
+ * Version: 0.1.1
  * Author: Patrick Sinco
  * 
  * Note: Keep twitter authentication settings in a separate file
